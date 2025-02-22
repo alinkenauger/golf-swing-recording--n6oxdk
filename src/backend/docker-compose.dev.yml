@@ -1,0 +1,153 @@
+version: "3.9"
+
+# Development environment configuration
+name: videocoach_dev
+
+services:
+  # API Gateway Service - Development Configuration
+  api_gateway:
+    build:
+      context: ./
+      dockerfile: Dockerfile.api
+    command: npm run dev
+    ports:
+      - "3000:3000"
+      - "9229:9229" # Node.js debugger port
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DEBUG: "videocoach:*"
+      LOG_LEVEL: debug
+      CORS_ORIGIN: "http://localhost:3000"
+      JWT_SECRET: dev_secret
+      API_RATE_LIMIT: 1000
+      API_RATE_WINDOW: "60"
+      ELASTIC_APM_ENABLED: "false"
+      PROMETHEUS_METRICS_ENABLED: "true"
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - videocoach_dev_network
+
+  # Video Processing Service - Development Configuration
+  video_service:
+    build:
+      context: ./
+      dockerfile: Dockerfile.video
+    command: python -m debugpy --listen 0.0.0.0:5678 -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+      - "5678:5678" # Python debugger port
+    environment:
+      PYTHONUNBUFFERED: 1
+      DEBUG: 1
+      LOG_LEVEL: DEBUG
+      MAX_VIDEO_SIZE_MB: 500
+      PROCESSING_TIMEOUT: 300
+      MONGODB_URI: "mongodb://dev_user:dev_password@mongodb:27017/videocoach_dev"
+      S3_BUCKET: videocoach-dev-videos
+      AWS_ACCESS_KEY_ID: dev_key
+      AWS_SECRET_ACCESS_KEY: dev_secret
+      AWS_REGION: us-east-1
+      ELASTIC_APM_ENABLED: "false"
+      PROMETHEUS_PORT: 9090
+    volumes:
+      - ./video-service:/app
+      - ./video-service/data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - mongodb
+    networks:
+      - videocoach_dev_network
+
+  # PostgreSQL Database - Development Configuration
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: videocoach_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_MAX_CONNECTIONS: 100
+      POSTGRES_SHARED_BUFFERS: 512MB
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d videocoach_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - videocoach_dev_network
+
+  # MongoDB Database - Development Configuration
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: videocoach_dev
+      MONGO_INITDB_ROOT_USERNAME: dev_user
+      MONGO_INITDB_ROOT_PASSWORD: dev_password
+      MONGODB_LOG_VERBOSITY: 2
+    volumes:
+      - mongodb_dev_data:/data/db
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - videocoach_dev_network
+
+  # Redis Cache - Development Configuration
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass dev_password
+    environment:
+      REDIS_LOG_LEVEL: debug
+    volumes:
+      - redis_dev_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - videocoach_dev_network
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  mongodb_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  videocoach_dev_network:
+    driver: bridge
+    enable_ipv6: true
+    internal: false
+    attachable: true
