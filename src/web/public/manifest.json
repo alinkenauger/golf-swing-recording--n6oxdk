@@ -1,0 +1,38 @@
+{
+  "name": "Video Coaching Platform",
+  "short_name": "VideoCoach",
+  "description": "Professional video coaching platform for remote sports training, detailed analysis, and personalized feedback",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#2D5BFF",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "sports",
+    "education",
+    "fitness",
+    "coaching",
+    "video",
+    "training"
+  ],
+  "scope": "/",
+  "prefer_related_applications": false,
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ]
+}
