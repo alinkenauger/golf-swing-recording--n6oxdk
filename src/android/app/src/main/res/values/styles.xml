@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme -->
+    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Color theming -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="colorOnSecondary">@color/color_white</item>
+        <item name="colorOnBackground">@color/color_text_primary</item>
+        <item name="colorOnSurface">@color/color_text_primary</item>
+        <item name="colorOnError">@color/color_white</item>
+
+        <!-- System bars -->
+        <item name="android:statusBarColor">@color/color_surface</item>
+        <item name="android:navigationBarColor">@color/color_surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <!-- Typography Styles -->
+    <style name="TextAppearance.App.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:lineHeight">38sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineHeight">29sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.App.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.0015</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="TextAppearance.App.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">21sp</item>
+        <item name="android:letterSpacing">0.0025</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="TextAppearance.App.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineHeight">18sp</item>
+        <item name="android:letterSpacing">0.004</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Widget.App.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Body2</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="backgroundTint">@color/color_primary</item>
+        <item name="rippleColor">@color/color_primary_dark</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="elevation">2dp</item>
+        <item name="android:stateListAnimator">@animator/button_state_list_animator</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <!-- Video Player Styles -->
+    <style name="Widget.App.VideoPlayer" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/color_black</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:keepScreenOn">true</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <!-- Annotation Tools Styles -->
+    <style name="Widget.App.AnnotationToolbar" parent="Widget.MaterialComponents.CardView">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">@color/color_surface</item>
+        <item name="android:elevation">6dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="cardCornerRadius">28dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:outlineProvider">background</item>
+        <item name="contentPadding">8dp</item>
+    </style>
+
+    <!-- Touch Target Styles -->
+    <style name="Widget.App.TouchTarget" parent="">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Progress Indicator Styles -->
+    <style name="Widget.App.ProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">@color/color_primary</item>
+        <item name="trackColor">@color/color_gray_200</item>
+        <item name="indicatorSize">48dp</item>
+        <item name="trackThickness">4dp</item>
+    </style>
+
+    <!-- Input Field Styles -->
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/color_primary</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="errorTextAppearance">@style/TextAppearance.App.Caption</item>
+        <item name="errorTextColor">@color/color_error</item>
+        <item name="hintTextAppearance">@style/TextAppearance.App.Caption</item>
+    </style>
+
+    <!-- Dialog Styles -->
+    <style name="Widget.App.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.App.Headline2</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.App.Body1</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button.Primary</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.MaterialComponents.Button.TextButton</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+</resources>
