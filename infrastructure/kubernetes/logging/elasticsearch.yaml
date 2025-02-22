@@ -1,0 +1,150 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: elasticsearch-config
+    namespace: videocoach-monitoring
+    labels:
+      app: elasticsearch
+      component: logging
+      part-of: videocoach-platform
+  data:
+    elasticsearch.yml: |
+      cluster.name: videocoach-logging
+      node.name: ${HOSTNAME}
+      network.host: 0.0.0.0
+      discovery.seed_hosts: ["elasticsearch-0.elasticsearch", "elasticsearch-1.elasticsearch", "elasticsearch-2.elasticsearch"]
+      cluster.initial_master_nodes: ["elasticsearch-0", "elasticsearch-1", "elasticsearch-2"]
+      xpack.security.enabled: true
+      xpack.monitoring.enabled: true
+      xpack.monitoring.collection.enabled: true
+      bootstrap.memory_lock: true
+      indices.query.bool.max_clause_count: 8192
+      path.data: /usr/share/elasticsearch/data
+      path.logs: /usr/share/elasticsearch/logs
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: elasticsearch
+    namespace: videocoach-monitoring
+    labels:
+      app: elasticsearch
+      component: logging
+      part-of: videocoach-platform
+  spec:
+    ports:
+    - name: http
+      port: 9200
+      protocol: TCP
+    - name: transport
+      port: 9300
+      protocol: TCP
+    selector:
+      app: elasticsearch
+    type: ClusterIP
+
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: elasticsearch
+    namespace: videocoach-monitoring
+    labels:
+      app: elasticsearch
+      component: logging
+      part-of: videocoach-platform
+  spec:
+    replicas: 3
+    serviceName: elasticsearch
+    selector:
+      matchLabels:
+        app: elasticsearch
+    template:
+      metadata:
+        labels:
+          app: elasticsearch
+      spec:
+        securityContext:
+          fsGroup: 1000
+          runAsUser: 1000
+        initContainers:
+        - name: fix-permissions
+          image: busybox:1.32
+          command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+          - name: elasticsearch-data
+            mountPath: /usr/share/elasticsearch/data
+        - name: increase-vm-max-map
+          image: busybox:1.32
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+        - name: configure-sysctl
+          image: busybox:1.32
+          command: ["sh", "-c", "ulimit -n 65536"]
+          securityContext:
+            privileged: true
+        containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms4g -Xmx4g"
+          - name: node.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "8Gi"
+            requests:
+              cpu: "1000m"
+              memory: "4Gi"
+          ports:
+          - containerPort: 9200
+            name: http
+          - containerPort: 9300
+            name: transport
+          volumeMounts:
+          - name: elasticsearch-data
+            mountPath: /usr/share/elasticsearch/data
+          - name: elasticsearch-config
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          readinessProbe:
+            httpGet:
+              path: /_cluster/health
+              port: 9200
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /_cluster/health
+              port: 9200
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+        volumes:
+        - name: elasticsearch-config
+          configMap:
+            name: elasticsearch-config
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: database-storage
+        resources:
+          requests:
+            storage: 100Gi
