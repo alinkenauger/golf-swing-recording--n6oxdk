@@ -1,0 +1,47 @@
+# Updated: 2024
+# Balances SEO optimization with security requirements
+
+# Global rules for all crawlers
+User-agent: *
+
+# Allow indexing of public routes and content
+Allow: /
+Allow: /explore
+Allow: /coach/*
+Allow: /programs/*
+Allow: /blog/*
+Allow: /about/*
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /assets/*
+Allow: /images/*
+
+# Block sensitive and private routes
+Disallow: /api/*
+Disallow: /dashboard/*
+Disallow: /payment/*
+Disallow: /chat/*
+Disallow: /video/*/annotate
+Disallow: /video/*/review
+Disallow: /video/*/private
+Disallow: /auth/*
+Disallow: /settings/*
+Disallow: /user/*
+Disallow: /admin/*
+Disallow: /analytics/*
+
+# Block direct access to application files
+Disallow: /*.json
+Disallow: /*.js
+Disallow: /*.css
+Disallow: /*.config
+Disallow: /webpack/*
+Disallow: /dist/*
+Disallow: /node_modules/*
+
+# Rate limiting for crawlers
+Crawl-delay: 10
+
+# Sitemap reference for optimized indexing
+Sitemap: https://videocoach.com/sitemap.xml
