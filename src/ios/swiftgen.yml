@@ -1,0 +1,57 @@
+strings:
+  inputs:
+    - VideoCoach/Resources/Localizable.strings
+  outputs:
+    templateName: structured-swift5
+    output: Generated/Strings.swift
+    params:
+      enumName: L10n
+      publicAccess: true
+
+xcassets:
+  inputs:
+    - VideoCoach/Resources/Assets.xcassets
+  outputs:
+    templateName: swift5
+    output: Generated/Assets.swift
+    params:
+      enumName: Asset
+      publicAccess: true
+      forceProvidesNamespaces: true
+
+fonts:
+  inputs:
+    - VideoCoach/Resources/Fonts
+  outputs:
+    templateName: swift5
+    output: Generated/Fonts.swift
+    params:
+      enumName: FontFamily
+      publicAccess: true
+
+ib:
+  inputs:
+    - VideoCoach/Resources/Base.lproj
+  outputs:
+    templateName: scenes-swift5
+    output: Generated/Storyboards.swift
+    params:
+      module: VideoCoach
+      publicAccess: true
+
+colors:
+  inputs:
+    - VideoCoach/Resources/Colors.xcassets
+  outputs:
+    templateName: swift5
+    output: Generated/Colors.swift
+    params:
+      enumName: ColorAsset
+      publicAccess: true
+
+# Output directory relative to project root
+output:
+  templatePath: null
+  output: ${SRCROOT}/VideoCoach/Generated
+
+# SwiftGen version: 6.6.0
