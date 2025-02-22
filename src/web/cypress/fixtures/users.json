@@ -1,0 +1,242 @@
+{
+  "users": [
+    {
+      "id": "admin-1234",
+      "email": "admin@videocoach.test",
+      "password": "Admin123!",
+      "role": "ADMIN",
+      "profile": {
+        "firstName": "Admin",
+        "lastName": "User",
+        "avatarUrl": "https://test-assets.videocoach.com/avatars/admin.jpg",
+        "bio": "Platform Administrator",
+        "location": "New York, USA",
+        "timezone": "America/New_York",
+        "phoneNumber": "+1-555-0123",
+        "socialLinks": [
+          {
+            "platform": "linkedin",
+            "url": "https://linkedin.com/in/admin-test"
+          },
+          {
+            "platform": "twitter",
+            "url": "https://twitter.com/admin-test"
+          }
+        ]
+      },
+      "preferences": {
+        "emailNotifications": true,
+        "pushNotifications": true,
+        "language": "en",
+        "theme": "system",
+        "privacySettings": {
+          "profileVisibility": "private",
+          "showActivity": false
+        }
+      },
+      "isActive": true,
+      "lastLogin": "2024-01-01T00:00:00Z",
+      "verificationStatus": "verified",
+      "createdAt": "2023-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "version": 1,
+      "mfaEnabled": true
+    },
+    {
+      "id": "coach-5678",
+      "email": "coach@videocoach.test",
+      "password": "Coach123!",
+      "role": "COACH",
+      "profile": {
+        "firstName": "Coach",
+        "lastName": "Test",
+        "avatarUrl": "https://test-assets.videocoach.com/avatars/coach.jpg",
+        "bio": "Professional Tennis Coach",
+        "location": "Los Angeles, USA",
+        "timezone": "America/Los_Angeles",
+        "phoneNumber": "+1-555-0124",
+        "socialLinks": [
+          {
+            "platform": "instagram",
+            "url": "https://instagram.com/coach-test"
+          },
+          {
+            "platform": "youtube",
+            "url": "https://youtube.com/coach-test"
+          }
+        ]
+      },
+      "coachProfile": {
+        "specialties": ["Tennis", "Performance Training"],
+        "experience": 10,
+        "certifications": [
+          {
+            "name": "USPTA Elite Professional",
+            "issuer": "USPTA",
+            "expiryDate": "2025-12-31",
+            "verificationUrl": "https://uspta.com/verify/12345"
+          },
+          {
+            "name": "PTR Professional",
+            "issuer": "PTR",
+            "expiryDate": "2025-12-31",
+            "verificationUrl": "https://ptr.org/verify/67890"
+          }
+        ],
+        "hourlyRate": 100,
+        "rating": 4.8,
+        "totalReviews": 150,
+        "availability": [
+          {
+            "weekday": "monday",
+            "slots": [
+              {
+                "start": "09:00",
+                "end": "17:00"
+              }
+            ]
+          },
+          {
+            "weekday": "wednesday",
+            "slots": [
+              {
+                "start": "09:00",
+                "end": "17:00"
+              }
+            ]
+          }
+        ],
+        "verificationDocuments": [
+          {
+            "type": "certification",
+            "url": "https://test-assets.videocoach.com/docs/cert1.pdf",
+            "status": "verified"
+          },
+          {
+            "type": "backgroundCheck",
+            "url": "https://test-assets.videocoach.com/docs/bg-check.pdf",
+            "status": "verified"
+          }
+        ]
+      },
+      "preferences": {
+        "emailNotifications": true,
+        "pushNotifications": true,
+        "language": "en",
+        "theme": "light",
+        "privacySettings": {
+          "profileVisibility": "public",
+          "showActivity": true
+        }
+      },
+      "isActive": true,
+      "lastLogin": "2024-01-01T00:00:00Z",
+      "verificationStatus": "verified",
+      "createdAt": "2023-06-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "version": 1,
+      "mfaEnabled": true
+    },
+    {
+      "id": "athlete-9012",
+      "email": "athlete@videocoach.test",
+      "password": "Athlete123!",
+      "role": "ATHLETE",
+      "profile": {
+        "firstName": "Athlete",
+        "lastName": "Test",
+        "avatarUrl": "https://test-assets.videocoach.com/avatars/athlete.jpg",
+        "bio": "Aspiring Tennis Player",
+        "location": "Miami, USA",
+        "timezone": "America/New_York",
+        "phoneNumber": "+1-555-0125",
+        "socialLinks": [
+          {
+            "platform": "instagram",
+            "url": "https://instagram.com/athlete-test"
+          }
+        ]
+      },
+      "athleteProfile": {
+        "sports": ["Tennis"],
+        "skillLevel": "intermediate",
+        "goals": [
+          {
+            "description": "Improve serve technique",
+            "targetDate": "2024-06-30",
+            "status": "active"
+          },
+          {
+            "description": "Tournament preparation",
+            "targetDate": "2024-12-31",
+            "status": "active"
+          }
+        ],
+        "activeSubscriptions": ["coach-5678"],
+        "performanceMetrics": [
+          {
+            "metric": "sessionsCompleted",
+            "value": 25,
+            "date": "2024-01-01"
+          },
+          {
+            "metric": "hoursTrained",
+            "value": 50,
+            "date": "2024-01-01"
+          }
+        ],
+        "injuryHistory": []
+      },
+      "preferences": {
+        "emailNotifications": true,
+        "pushNotifications": true,
+        "language": "en",
+        "theme": "dark",
+        "privacySettings": {
+          "profileVisibility": "connections",
+          "showActivity": true
+        }
+      },
+      "isActive": true,
+      "lastLogin": "2024-01-01T00:00:00Z",
+      "verificationStatus": "verified",
+      "createdAt": "2023-09-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "version": 1,
+      "mfaEnabled": false
+    },
+    {
+      "id": "inactive-3456",
+      "email": "inactive@videocoach.test",
+      "password": "Inactive123!",
+      "role": "ATHLETE",
+      "profile": {
+        "firstName": "Inactive",
+        "lastName": "User",
+        "avatarUrl": null,
+        "bio": null,
+        "location": null,
+        "timezone": "UTC",
+        "phoneNumber": null,
+        "socialLinks": []
+      },
+      "preferences": {
+        "emailNotifications": false,
+        "pushNotifications": false,
+        "language": "en",
+        "theme": "system",
+        "privacySettings": {
+          "profileVisibility": "private",
+          "showActivity": false
+        }
+      },
+      "isActive": false,
+      "lastLogin": null,
+      "verificationStatus": "pending",
+      "createdAt": "2023-12-01T00:00:00Z",
+      "updatedAt": "2023-12-01T00:00:00Z",
+      "version": 1,
+      "mfaEnabled": false
+    }
+  ]
+}
