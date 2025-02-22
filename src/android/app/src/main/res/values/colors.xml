@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="color_primary">#2D5BFF</color>
+    <color name="color_primary_dark">#1A44FF</color>
+    <color name="color_primary_light">#4D73FF</color>
+    <color name="color_primary_variant">#1A44FF</color>
+    
+    <color name="color_secondary">#1A1F36</color>
+    <color name="color_secondary_dark">#0F1320</color>
+    <color name="color_secondary_light">#2A3356</color>
+    <color name="color_secondary_variant">#2A3356</color>
+
+    <!-- State Colors -->
+    <color name="color_success">#00B67A</color>
+    <color name="color_success_dark">#008F61</color>
+    <color name="color_success_light">#33C595</color>
+    
+    <color name="color_error">#FF4D4D</color>
+    <color name="color_error_dark">#CC3D3D</color>
+    <color name="color_error_light">#FF7373</color>
+    
+    <color name="color_warning">#FFC107</color>
+    <color name="color_info">#17A2B8</color>
+
+    <!-- Gray Scale -->
+    <color name="color_gray_50">#F8F9FA</color>
+    <color name="color_gray_100">#E9ECEF</color>
+    <color name="color_gray_200">#DEE2E6</color>
+    <color name="color_gray_300">#CED4DA</color>
+    <color name="color_gray_400">#ADB5BD</color>
+    <color name="color_gray_500">#6C757D</color>
+    <color name="color_gray_600">#495057</color>
+    <color name="color_gray_700">#343A40</color>
+    <color name="color_gray_800">#1A1F36</color>
+
+    <!-- Base Colors -->
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_black">#000000</color>
+    <color name="color_transparent">#00000000</color>
+
+    <!-- Theme Colors - Light -->
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_background">#F8F9FA</color>
+    <color name="color_text_primary">#1A1F36</color>
+    <color name="color_text_secondary">#6C757D</color>
+    <color name="color_text_disabled">#ADB5BD</color>
+    <color name="color_divider">#DEE2E6</color>
+    <color name="color_ripple">#1A1F36</color>
+
+    <!-- Theme Colors - Dark -->
+    <color name="color_surface_dark">#121212</color>
+    <color name="color_background_dark">#000000</color>
+    <color name="color_text_primary_dark">#FFFFFF</color>
+    <color name="color_text_secondary_dark">#ADB5BD</color>
+    <color name="color_text_disabled_dark">#6C757D</color>
+    <color name="color_divider_dark">#343A40</color>
+    <color name="color_ripple_dark">#FFFFFF</color>
+
+    <!-- Utility Colors -->
+    <color name="color_overlay">#80000000</color>
+    <color name="color_scrim">#99000000</color>
+</resources>
