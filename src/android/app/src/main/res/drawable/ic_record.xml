@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Record button icon for video recording interface
+    Size: 48dp x 48dp touch target with 24dp viewport
+    Style: Material Design circular recording indicator
+    Colors: Error color tint with white fill
+    Accessibility: Meets minimum touch target size (48dp)
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="@color/color_error">
+
+    <!-- 
+        Circular recording indicator
+        - Centered at (12,12)
+        - Radius of 8dp
+        - Solid white fill
+        - Error color tint applied from parent
+    -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,12m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0"/>
+
+</vector>
