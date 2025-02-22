@@ -1,0 +1,65 @@
+# These owners will be the default owners for everything in
+# the repository unless a later match takes precedence
+* @videocoach/core-team
+
+# Mobile Applications
+src/android/       @videocoach/android-team
+src/ios/          @videocoach/ios-team
+
+# Web Application
+src/web/          @videocoach/web-team
+
+# Backend Services - Core
+src/backend/api-gateway/        @videocoach/backend-team
+src/backend/shared/            @videocoach/backend-team
+
+# Backend Services - Security Critical
+# These services require security team review due to sensitive data handling
+src/backend/user-service/      @videocoach/backend-team @videocoach/security-team
+src/backend/payment-service/   @videocoach/backend-team @videocoach/security-team
+src/backend/chat-service/      @videocoach/backend-team @videocoach/security-team
+
+# Video Processing Service
+# Requires both performance optimization and security review
+src/backend/video-service/     @videocoach/video-team @videocoach/security-team
+
+# Infrastructure and DevOps
+infrastructure/                @videocoach/devops-team
+infrastructure/kubernetes/     @videocoach/devops-team @videocoach/security-team
+infrastructure/terraform/      @videocoach/devops-team @videocoach/security-team
+
+# CI/CD Pipeline Configurations
+.github/workflows/            @videocoach/devops-team @videocoach/security-team
+
+# Documentation
+docs/                        @videocoach/core-team
+docs/security/              @videocoach/security-team
+
+# Test Configurations
+tests/                      @videocoach/core-team
+**/test/                   @videocoach/core-team
+**/tests/                  @videocoach/core-team
+**/__tests__/              @videocoach/core-team
+
+# Package Dependencies
+package.json               @videocoach/core-team @videocoach/security-team
+yarn.lock                 @videocoach/core-team @videocoach/security-team
+**/package.json           @videocoach/core-team @videocoach/security-team
+**/requirements.txt       @videocoach/core-team @videocoach/security-team
+**/pyproject.toml        @videocoach/core-team @videocoach/security-team
+
+# Security and Configuration Files
+.env*                     @videocoach/security-team
+**/config/*              @videocoach/security-team
+**/*.config.js           @videocoach/security-team
+**/*.config.ts           @videocoach/security-team
+
+# Database Migrations
+**/migrations/           @videocoach/backend-team @videocoach/security-team
+**/alembic/             @videocoach/backend-team @videocoach/security-team
+
+# Build and Deployment Configurations
+Dockerfile              @videocoach/devops-team
+docker-compose.yml      @videocoach/devops-team
+**/Dockerfile          @videocoach/devops-team
+**/*.dockerfile        @videocoach/devops-team
