@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme -->
+    <style name="Theme.VideoCoach" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Material Design 3 color attributes -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="colorPrimaryContainer">@color/color_primary_light</item>
+        <item name="colorOnPrimaryContainer">@color/color_primary_dark</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorOnSecondary">@color/color_white</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_light</item>
+        <item name="colorOnSecondaryContainer">@color/color_secondary_dark</item>
+        <item name="colorTertiary">@color/color_success</item>
+        <item name="colorOnTertiary">@color/color_white</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="colorOnError">@color/color_white</item>
+        <item name="colorErrorContainer">@color/color_error_light</item>
+        <item name="colorOnErrorContainer">@color/color_error_dark</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorOnBackground">@color/color_text_primary</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_text_primary</item>
+        <item name="colorSurfaceVariant">@color/color_gray_100</item>
+        <item name="colorOnSurfaceVariant">@color/color_text_secondary</item>
+        <item name="colorOutline">@color/color_divider</item>
+
+        <!-- System bars configuration -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceDisplay">@style/TextAppearance.App.Headline1</item>
+        <item name="textAppearanceHeadline">@style/TextAppearance.App.Headline2</item>
+        <item name="textAppearanceTitle">@style/TextAppearance.App.Body1</item>
+        <item name="textAppearanceBody">@style/TextAppearance.App.Body2</item>
+
+        <!-- Component styles -->
+        <item name="materialButtonStyle">@style/Widget.App.Button.Primary</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.TouchTarget</item>
+        <item name="videoPlayerStyle">@style/Widget.App.VideoPlayer</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+        <item name="materialAlertDialogTheme">@style/Widget.App.Dialog</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.App.ProgressIndicator</item>
+
+        <!-- Accessibility -->
+        <item name="minTouchTargetSize">48dp</item>
+        <item name="android:textViewStyle">@style/TextAppearance.App.Body1</item>
+        <item name="android:buttonStyle">@style/Widget.App.Button.Primary</item>
+    </style>
+
+    <!-- Dark theme variant -->
+    <style name="Theme.VideoCoach.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Material Design 3 dark theme colors -->
+        <item name="colorPrimary">@color/color_primary_light</item>
+        <item name="colorOnPrimary">@color/color_black</item>
+        <item name="colorPrimaryContainer">@color/color_primary_dark</item>
+        <item name="colorOnPrimaryContainer">@color/color_primary_light</item>
+        <item name="colorSecondary">@color/color_secondary_light</item>
+        <item name="colorOnSecondary">@color/color_black</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_dark</item>
+        <item name="colorOnSecondaryContainer">@color/color_secondary_light</item>
+        <item name="colorError">@color/color_error_light</item>
+        <item name="colorOnError">@color/color_black</item>
+        <item name="colorErrorContainer">@color/color_error_dark</item>
+        <item name="colorOnErrorContainer">@color/color_error_light</item>
+        <item name="android:colorBackground">@color/color_background_dark</item>
+        <item name="colorOnBackground">@color/color_text_primary_dark</item>
+        <item name="colorSurface">@color/color_surface_dark</item>
+        <item name="colorOnSurface">@color/color_text_primary_dark</item>
+        <item name="colorSurfaceVariant">@color/color_gray_700</item>
+        <item name="colorOnSurfaceVariant">@color/color_text_secondary_dark</item>
+        <item name="colorOutline">@color/color_divider_dark</item>
+
+        <!-- System bars for dark theme -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <!-- Video player theme overlay -->
+    <style name="Theme.VideoCoach.VideoPlayer" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:windowBackground">@color/color_black</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="android:statusBarColor">@color/color_black</item>
+        <item name="android:navigationBarColor">@color/color_black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="videoPlayerStyle">@style/Widget.App.VideoPlayer</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button.Primary</item>
+    </style>
+
+    <!-- Annotation tools theme overlay -->
+    <style name="Theme.VideoCoach.AnnotationTools" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_text_primary</item>
+        <item name="elevationOverlayEnabled">true</item>
+        <item name="elevationOverlayColor">@color/color_scrim</item>
+    </style>
+
+</resources>
