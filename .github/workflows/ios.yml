@@ -1,0 +1,225 @@
+name: iOS CI/CD Pipeline
+
+on:
+  push:
+    branches: [ develop, staging, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+# Global environment variables
+env:
+  DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
+  DEVELOPER_APP_IDENTIFIER: ${{ secrets.DEVELOPER_APP_IDENTIFIER }}
+  PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+  TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+  TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+  APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+  APPLE_KEY_ISSUER_ID: ${{ secrets.APPLE_KEY_ISSUER_ID }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+  BUILD_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'development' }}
+  XCODE_VERSION: '15.0'
+
+jobs:
+  test:
+    name: Test
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Cache Gems
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Cache Pods
+        uses: actions/cache@v3
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec pod install
+
+      - name: Run tests
+        run: bundle exec fastlane test
+        env:
+          FASTLANE_XCODE_SELECT_TIMEOUT: 60
+
+      - name: Upload test results
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test_output
+          retention-days: 14
+
+  beta:
+    name: Beta Distribution
+    needs: test
+    if: github.ref == 'refs/heads/develop'
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Apple certificates
+        uses: apple-actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: ${{ env.DEVELOPER_APP_IDENTIFIER }}
+          profile-type: 'IOS_APP_DEVELOPMENT'
+          issuer-id: ${{ env.APPLE_KEY_ISSUER_ID }}
+          api-key-id: ${{ env.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_PRIVATE_KEY }}
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec pod install
+
+      - name: Deploy to Firebase
+        run: |
+          bundle exec fastlane beta version:${{ github.sha }}
+        env:
+          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          CI_BUILD_NUMBER: ${{ github.run_number }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: beta-build
+          path: builds
+          retention-days: 14
+
+  release:
+    name: App Store Release
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install Apple certificates
+        uses: apple-actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: ${{ env.DEVELOPER_APP_IDENTIFIER }}
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ env.APPLE_KEY_ISSUER_ID }}
+          api-key-id: ${{ env.APPLE_KEY_ID }}
+          api-private-key: ${{ secrets.APPLE_PRIVATE_KEY }}
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec pod install
+
+      - name: Deploy to App Store
+        run: |
+          bundle exec fastlane release version:${{ github.event.release.tag_name }}
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          CI_BUILD_NUMBER: ${{ github.run_number }}
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-build
+          path: |
+            builds
+            builds/signing_identity.log
+            builds/validation.log
+          retention-days: 30
+
+      - name: Create release notes
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          release_name: Release ${{ github.event.release.tag_name }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+
+  cleanup:
+    name: Cleanup
+    needs: [test, beta, release]
+    if: always()
+    runs-on: macos-latest
+
+    steps:
+      - name: Remove temporary keychain
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true
+
+      - name: Clean build artifacts
+        if: always()
+        run: |
+          rm -rf builds/* || true
+          rm -rf test_output/* || true
+          rm -rf ~/Library/Developer/Xcode/DerivedData/* || true
+
+      - name: Generate cleanup report
+        if: always()
+        run: |
+          echo "Cleanup completed at $(date)" > cleanup_report.txt
+          echo "Runner: ${{ runner.os }}" >> cleanup_report.txt
+          echo "Workflow: ${{ github.workflow }}" >> cleanup_report.txt
+
+      - name: Upload cleanup report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cleanup-report
+          path: cleanup_report.txt
+          retention-days: 7
