@@ -1,0 +1,21 @@
+/build/*
+/release
+/debug
+.cxx
+
+# IDE files
+*.iml
+
+# Build system
+.gradle
+
+# Local configuration
+local.properties
+
+# System files
+.DS_Store
+
+# Debug files
+*.hprof
+*.log
+captures/
