@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: video-service
+    namespace: videocoach-system
+    labels:
+      app: video-service
+      component: backend
+      part-of: video-coaching-platform
+      version: latest
+    annotations:
+      description: Video processing service for handling uploads and analysis
+      maintainer: platform-team
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8000"
+      prometheus.io/path: "/metrics"
+  spec:
+    replicas: 3
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    selector:
+      matchLabels:
+        app: video-service
+    template:
+      metadata:
+        labels:
+          app: video-service
+          component: backend
+          part-of: video-coaching-platform
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8000"
+          prometheus.io/path: "/metrics"
+      spec:
+        containers:
+        - name: video-service
+          image: videocoach/video-service:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8000
+            name: http
+            protocol: TCP
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+          env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: video-service-secrets
+                key: mongodb-uri
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: video-service-secrets
+                key: aws-access-key-id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: video-service-secrets
+                key: aws-secret-access-key
+          - name: S3_BUCKET
+            valueFrom:
+              configMapKeyRef:
+                name: video-service-config
+                key: s3-bucket
+          - name: LOG_LEVEL
+            value: "info"
+          - name: MAX_UPLOAD_SIZE
+            value: "1024m"
+          - name: PROCESSING_TIMEOUT
+            value: "60"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 2000
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - video-service
+                topologyKey: kubernetes.io/hostname
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: video-service
+    namespace: videocoach-system
+    labels:
+      app: video-service
+      component: backend
+      part-of: video-coaching-platform
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8000"
+  spec:
+    type: ClusterIP
+    ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: http
+    selector:
+      app: video-service
