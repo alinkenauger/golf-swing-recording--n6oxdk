@@ -1,0 +1,98 @@
+# Development Environment
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.swp
+*.swo
+.eslintcache
+.stylelintcache
+*.pid
+*.seed
+*.pid.lock
+
+# Web Application
+src/web/.next/
+src/web/out/
+src/web/node_modules/
+src/web/.vercel/
+src/web/coverage/
+src/web/cypress/videos/
+src/web/cypress/screenshots/
+src/web/.next-pwa/
+src/web/public/sw.js
+src/web/public/workbox-*.js
+src/web/.react-email/
+src/web/storybook-static/
+src/web/.lighthouse/
+
+# iOS Application
+src/ios/Pods/
+src/ios/*.xcworkspace/
+src/ios/*.xcodeproj/xcuserdata/
+src/ios/build/
+src/ios/fastlane/report.xml
+src/ios/*.ipa
+src/ios/*.dSYM.zip
+src/ios/DerivedData/
+src/ios/*.mobileprovision
+src/ios/fastlane/test_output/
+src/ios/vendor/bundle/
+
+# Android Application
+src/android/.gradle/
+src/android/build/
+src/android/app/build/
+src/android/local.properties
+src/android/*.apk
+src/android/*.aab
+src/android/.idea/caches/
+src/android/app/release/
+src/android/captures/
+src/android/fastlane/metadata/
+
+# Backend Services
+src/backend/node_modules/
+src/backend/*/node_modules/
+src/backend/*/dist/
+src/backend/*/__pycache__/
+src/backend/video-service/venv/
+src/backend/coverage/
+src/backend/.env*
+src/backend/*/uploads/
+src/backend/*/logs/
+src/backend/*/.pytest_cache/
+src/backend/*/celerybeat-schedule
+src/backend/*/.coverage
+
+# Infrastructure
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate*
+infrastructure/terraform/*.tfvars
+infrastructure/kubernetes/config/*/secrets.yaml
+infrastructure/ssl/*.pem
+infrastructure/ssl/*.key
+infrastructure/aws/
+infrastructure/kubeconfig
+infrastructure/ansible/*.retry
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.code-workspace
+.history/
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Dependencies and Build
+node_modules/
+dist/
+build/
+coverage/
+
+# Environment Files
+.env
+.env.local
+.env.*.local
