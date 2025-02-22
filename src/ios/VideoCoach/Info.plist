@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Basic Application Information -->
+    <key>CFBundleIdentifier</key>
+    <string>com.videocoach.app</string>
+    <key>CFBundleName</key>
+    <string>Video Coach</string>
+    <key>CFBundleDisplayName</key>
+    <string>Video Coach</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    
+    <!-- Device and Interface Configuration -->
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIMainStoryboardFile</key>
+    <string>Main</string>
+    
+    <!-- Device Capabilities -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+        <string>arm64</string>
+        <string>video-camera</string>
+        <string>microphone</string>
+        <string>still-camera</string>
+        <string>metal</string>
+    </array>
+    
+    <!-- Supported Interface Orientations -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    
+    <!-- Required Permissions -->
+    <key>NSCameraUsageDescription</key>
+    <string>Video Coach requires camera access to record high-quality training videos and provide real-time coaching feedback</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Microphone access is needed for recording voice-over analysis and providing detailed coaching instructions</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Access to your photo library allows you to import existing videos for analysis and save coaching feedback</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Face ID provides secure and convenient access to your coaching account and protected training content</string>
+    
+    <!-- URL Schemes -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>videocoach</string>
+                <string>com.videocoach.auth</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>com.videocoach.app</string>
+        </dict>
+    </array>
+    
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>fetch</string>
+        <string>remote-notification</string>
+        <string>processing</string>
+    </array>
+    
+    <!-- App Transport Security -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>videocoach.app</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSExceptionRequiresForwardSecrecy</key>
+                <true/>
+                <key>NSExceptionMinimumTLSVersion</key>
+                <string>TLSv1.3</string>
+                <key>NSRequiresCertificateTransparency</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+    
+    <!-- Environment Configuration -->
+    <key>API_BASE_URL</key>
+    <string>$(API_BASE_URL)</string>
+    <key>SOCKET_URL</key>
+    <string>$(SOCKET_URL)</string>
+    <key>ENVIRONMENT</key>
+    <string>$(ENVIRONMENT)</string>
+    
+    <!-- Additional Capabilities -->
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <true/>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>https</string>
+        <string>tel</string>
+        <string>mailto</string>
+    </array>
+</dict>
+</plist>
