@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hardware-accelerated slide-in animation resource
+    - Follows Material Design motion guidelines
+    - Supports RTL layouts
+    - Respects system animation scale settings
+    - Uses hardware acceleration for smooth performance
+    Duration: 300ms
+    Interpolation: Accelerate-decelerate for natural motion
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="true"
+    android:layoutDirection="locale"
+    android:fillAfter="true">
+
+    <translate
+        android:fromXDelta="-100%p"
+        android:toXDelta="0"
+        android:duration="300"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:fillEnabled="true"
+        android:fillAfter="true" />
+
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="300"
+        android:fillEnabled="true"
+        android:fillAfter="true" />
+
+    <!--
+        Hardware layer type is set to optimize rendering performance
+        Layer type is automatically reset after animation completes
+    -->
+    <set
+        android:layerType="hardware"
+        android:hardwareAccelerated="true">
+    </set>
+
+</set>
