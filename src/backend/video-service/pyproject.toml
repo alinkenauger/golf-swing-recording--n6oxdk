@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "video-service"
+version = "1.0.0"
+description = "High-performance video processing service for analyzing, annotating and managing coaching videos with support for format validation, compression, and variant generation"
+authors = ["Video Coach Team"]
+license = "Proprietary"
+readme = "README.md"
+python = ">=3.11,<3.12"
+
+[build-system]
+requires = ["poetry-core>=1.7.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+fastapi = "^0.104.0"
+uvicorn = "^0.24.0"
+pydantic = "^2.4.2"
+opencv-python = "^4.8.1"
+numpy = "^1.24.3"
+ffmpeg-python = "^0.2.0"
+python-magic = "^0.4.27"
+boto3 = "^1.28.44"
+sqlalchemy = "^2.0.22"
+pymongo = "^4.5.0"
+python-jose = "^3.3.0"
+elastic-apm = "^6.18.0"
+prometheus-fastapi-instrumentator = "^6.1.0"
+python-multipart = "^0.0.6"
+redis = "^5.0.1"
+tenacity = "^8.2.3"
+pillow = "^10.0.1"
+structlog = "^23.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+pytest-asyncio = "^0.21.1"
+black = "^23.9.1"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.5.1"
+bandit = "^1.7.5"
+safety = "^2.3.5"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = "src"
+extend-exclude = "/migrations"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 100
+known_first_party = ["video_service"]
+known_third_party = ["fastapi", "pydantic", "sqlalchemy"]
+
+[tool.mypy]
+python_version = "3.11"
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+strict_optional = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --cov=src --cov-report=term-missing --cov-report=xml"
