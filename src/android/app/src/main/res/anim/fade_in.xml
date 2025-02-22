@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fade-in animation resource for smooth UI transitions
+    Version: 1.0
+    Min SDK: 16
+    Target SDK: 34
+    
+    Properties:
+    - Hardware accelerated alpha animation
+    - Natural motion with accelerate-decelerate interpolation
+    - 300ms duration optimized for user experience
+    - Maintains final state after animation
+    - Respects system animation scale and reduce motion settings
+    - Minimal memory and battery impact
+-->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromAlpha="0.0"
+    android:toAlpha="1.0"
+    android:duration="300"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+    android:fillAfter="true" />
