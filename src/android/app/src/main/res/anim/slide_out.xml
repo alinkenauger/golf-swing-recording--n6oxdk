@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Slide-out animation resource for transitioning UI components out of view
+    Version: 1.0
+    Platform: Android (min SDK 21)
+    
+    Properties:
+    - Uses relative measurements (100%p) for consistent behavior across screen sizes
+    - Accelerate-decelerate interpolation for natural motion
+    - 300ms duration balances smoothness with responsiveness
+    - Respects system animation settings for accessibility
+    - Optimized for 60fps performance
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="true">
+    
+    <translate
+        android:fromXDelta="0"
+        android:toXDelta="100%p"
+        android:duration="300"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:fillAfter="true"
+        android:fillEnabled="true" />
+        
+</set>
