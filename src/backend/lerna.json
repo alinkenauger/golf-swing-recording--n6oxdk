@@ -1,0 +1,35 @@
+{
+  "version": "independent",
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "packages": [
+    "api-gateway",
+    "chat-service", 
+    "coach-service",
+    "payment-service",
+    "user-service",
+    "video-service",
+    "shared"
+  ],
+  "command": {
+    "publish": {
+      "message": "chore(release): publish",
+      "registry": "https://registry.npmjs.org/",
+      "ignoreChanges": [
+        "**/*.md",
+        "**/test/**",
+        "**/tests/**",
+        "**/*.test.ts",
+        "**/*.spec.ts"
+      ]
+    },
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    },
+    "version": {
+      "allowBranch": ["main", "develop"],
+      "conventionalCommits": true,
+      "message": "chore(release): version packages"
+    }
+  }
+}
