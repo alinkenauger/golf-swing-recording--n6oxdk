@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base spacing units following Material Design guidelines -->
+    <dimen name="spacing_xxs">4dp</dimen>
+    <dimen name="spacing_xs">8dp</dimen>
+    <dimen name="spacing_sm">12dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- Navigation and toolbar dimensions -->
+    <dimen name="nav_height">56dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+
+    <!-- Accessibility - minimum touch target size -->
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- Video player dimensions -->
+    <dimen name="video_player_height">240dp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_size_sm">16dp</dimen>
+    <dimen name="icon_size_md">24dp</dimen>
+    <dimen name="icon_size_lg">32dp</dimen>
+
+    <!-- Typography scale (sp for text sizes) -->
+    <dimen name="text_size_xs">12sp</dimen>
+    <dimen name="text_size_sm">14sp</dimen>
+    <dimen name="text_size_md">16sp</dimen>
+    <dimen name="text_size_lg">20sp</dimen>
+    <dimen name="text_size_xl">24sp</dimen>
+
+    <!-- Material Design elevations and shapes -->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+</resources>
