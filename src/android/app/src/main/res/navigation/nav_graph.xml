@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- Login Flow -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.videocoach.presentation.login.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login">
+        
+        <action
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="requiresAuth"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
+
+        <action
+            android:id="@+id/action_login_to_signup"
+            app:destination="@id/signupFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+
+        <action
+            android:id="@+id/action_login_to_forgot_password"
+            app:destination="@id/forgotPasswordFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+
+    <!-- Main Navigation Flow -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.videocoach.presentation.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_video_annotation"
+            app:destination="@id/videoAnnotationFragment">
+            <argument
+                android:name="videoId"
+                app:argType="string"
+                app:nullable="false" />
+            <argument
+                android:name="requiresAuth"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
+
+        <action
+            android:id="@+id/action_home_to_chat"
+            app:destination="@id/chatFragment"
+            app:popUpTo="@id/homeFragment" />
+
+        <action
+            android:id="@+id/action_home_to_profile"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/homeFragment" />
+
+        <deepLink
+            android:id="@+id/deeplink_home"
+            app:uri="videocoach://home" />
+    </fragment>
+
+    <!-- Video Annotation Flow -->
+    <fragment
+        android:id="@+id/videoAnnotationFragment"
+        android:name="com.videocoach.presentation.video.VideoAnnotationFragment"
+        android:label="@string/video_annotation"
+        tools:layout="@layout/fragment_video_annotation">
+
+        <argument
+            android:name="videoId"
+            app:argType="string"
+            app:nullable="false" />
+
+        <argument
+            android:name="requiresAuth"
+            android:defaultValue="true"
+            app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_video_annotation_to_player"
+            app:destination="@id/videoPlayerFragment">
+            <argument
+                android:name="videoId"
+                app:argType="string" />
+        </action>
+
+        <deepLink
+            android:id="@+id/deeplink_video"
+            app:uri="videocoach://video/{videoId}" />
+    </fragment>
+
+    <!-- Coach Profile Flow -->
+    <fragment
+        android:id="@+id/coachProfileFragment"
+        android:name="com.videocoach.presentation.coach.CoachProfileFragment"
+        android:label="@string/coach_profile"
+        tools:layout="@layout/fragment_coach_profile">
+
+        <argument
+            android:name="coachId"
+            app:argType="string"
+            app:nullable="false" />
+
+        <deepLink
+            android:id="@+id/deeplink_coach"
+            app:uri="videocoach://coach/{coachId}" />
+    </fragment>
+
+    <!-- Global Actions -->
+    <action
+        android:id="@+id/action_global_logout"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <!-- Navigation Security -->
+    <navigation-security>
+        <auth-state>
+            <protected-destinations>
+                <destination id="@id/videoAnnotationFragment" />
+                <destination id="@id/chatFragment" />
+                <destination id="@id/profileFragment" />
+            </protected-destinations>
+        </auth-state>
+    </navigation-security>
+
+    <!-- Analytics -->
+    <analytics>
+        <screen-tracking enabled="true" />
+        <transition-tracking enabled="true" />
+    </analytics>
+
+</navigation>
