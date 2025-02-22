@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videocoach-staging-config
+  namespace: staging
+  labels:
+    app: videocoach
+    environment: staging
+    version: 1.0.0
+data:
+  # Global Environment Settings
+  ENVIRONMENT: "staging"
+  LOG_LEVEL: "info"
+  DEBUG: "false"
+  API_VERSION: "v1"
+
+  # API Gateway Configuration
+  API_GATEWAY_CONFIG: |
+    {
+      "port": 3000,
+      "host": "0.0.0.0",
+      "corsOrigins": [
+        "https://staging.videocoach.com",
+        "https://api.staging.videocoach.com"
+      ],
+      "rateLimiting": {
+        "public": {
+          "windowMs": 60000,
+          "max": 100
+        },
+        "authenticated": {
+          "windowMs": 60000,
+          "max": 1000
+        },
+        "videoUpload": {
+          "windowMs": 3600000,
+          "max": 10
+        }
+      },
+      "timeout": 30000,
+      "maxPayloadSize": "50mb",
+      "security": {
+        "headers": {
+          "hsts": true,
+          "noSniff": true,
+          "xssProtection": true
+        }
+      }
+    }
+
+  # Video Service Configuration
+  VIDEO_SERVICE_CONFIG: |
+    {
+      "port": 8000,
+      "host": "0.0.0.0",
+      "maxVideoSizeMb": 500,
+      "minVideoSizeMb": 1,
+      "videoProcessingTimeout": 60,
+      "videoProcessingThreads": 4,
+      "supportedFormats": [".mp4", ".mov", ".avi"],
+      "s3Prefix": "videos/staging/",
+      "outputFormats": {
+        "HD": {
+          "resolution": "1080p",
+          "bitrate": "5000k"
+        },
+        "SD": {
+          "resolution": "720p",
+          "bitrate": "2500k"
+        },
+        "MOBILE": {
+          "resolution": "480p",
+          "bitrate": "1000k"
+        }
+      },
+      "processingQueue": "staging-video-processing",
+      "maxConcurrentProcessing": 5
+    }
+
+  # Payment Service Configuration
+  PAYMENT_SERVICE_CONFIG: |
+    {
+      "port": 3003,
+      "host": "0.0.0.0",
+      "apiPrefix": "/api/v1",
+      "database": {
+        "poolSize": 10,
+        "connectTimeoutMS": 30000,
+        "retryWrites": true,
+        "retryReads": true
+      },
+      "stripe": {
+        "apiVersion": "2023-10-16",
+        "timeout": 30000,
+        "maxRetries": 3,
+        "idempotencyKeyPrefix": "staging_payment"
+      },
+      "rateLimiting": {
+        "windowMs": 900000,
+        "max": 100
+      }
+    }
+
+  # Monitoring Configuration
+  MONITORING_CONFIG: |
+    {
+      "metrics": {
+        "enabled": true,
+        "interval": 15000,
+        "prometheusPort": 9090,
+        "scrapeInterval": "15s",
+        "retention": "30d"
+      },
+      "logging": {
+        "format": "json",
+        "rotation": {
+          "maxSize": "10m",
+          "maxFiles": "7d"
+        },
+        "errorTracking": {
+          "enabled": true,
+          "sampleRate": 0.1
+        }
+      },
+      "healthCheck": {
+        "enabled": true,
+        "interval": 30000,
+        "endpoints": [
+          "https://health.staging.videocoach.com"
+        ]
+      },
+      "alerting": {
+        "enabled": true,
+        "endpoints": [
+          "https://alerts.staging.videocoach.com"
+        ],
+        "thresholds": {
+          "errorRate": 0.05,
+          "latency": 1000,
+          "cpuUsage": 0.8
+        }
+      }
+    }
+
+  # APM Configuration
+  APM_CONFIG: |
+    {
+      "serviceName": "videocoach-staging",
+      "environment": "staging",
+      "serverUrl": "http://apm-server.monitoring:8200",
+      "secretToken": "",
+      "active": true,
+      "logLevel": "info",
+      "transactionSampleRate": 0.1
+    }
+
+  # Redis Configuration
+  REDIS_CONFIG: |
+    {
+      "host": "redis-master.staging",
+      "port": 6379,
+      "maxRetries": 3,
+      "connectTimeout": 10000,
+      "keyPrefix": "staging:",
+      "maxMemoryPolicy": "allkeys-lru"
+    }
