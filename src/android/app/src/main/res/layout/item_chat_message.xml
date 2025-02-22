@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for individual chat message items in RecyclerView -->
+<!-- androidx.constraintlayout.widget:constraintlayout:2.1.4 -->
+<!-- com.google.android.material:material:1.9.0 -->
+<!-- de.hdodenhof.circleimageview:circleimageview:3.1.0 -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/message_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/message_margin"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:contentDescription="@string/avatar_description"
+        android:importantForAccessibility="yes"
+        app:civ_border_width="1dp"
+        app:civ_border_color="?attr/colorSurfaceVariant"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/message_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/message_margin"
+        android:layout_marginEnd="48dp"
+        app:cardCornerRadius="@dimen/message_bubble_radius"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/user_avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/thumbnail_max_width"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorOnSurface"
+                android:textIsSelectable="true"
+                android:importantForAccessibility="yes"
+                android:accessibilityLiveRegion="polite" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/video_thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="@dimen/thumbnail_max_width"
+                android:maxHeight="@dimen/thumbnail_max_height"
+                android:contentDescription="@string/video_thumbnail_description"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:shapeAppearance="@style/ShapeAppearance.App.VideoThumbnail" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.internal.FlowLayout
+        android:id="@+id/reactions_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/message_bubble"
+        app:layout_constraintEnd_toEndOf="@id/message_bubble"
+        android:clipToPadding="false"
+        android:clipChildren="false" />
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintTop_toBottomOf="@id/message_bubble"
+        app:layout_constraintStart_toStartOf="@id/message_bubble" />
+
+    <ImageView
+        android:id="@+id/message_status"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/message_status_description"
+        android:importantForAccessibility="yes"
+        app:layout_constraintBottom_toBottomOf="@id/timestamp"
+        app:layout_constraintStart_toEndOf="@id/timestamp"
+        app:tint="?attr/colorOnSurfaceVariant" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
