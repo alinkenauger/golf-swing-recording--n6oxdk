@@ -1,0 +1,141 @@
+### Xcode ###
+## User settings and state
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+IDEWorkspaceChecks.plist
+WorkspaceSettings.xcsettings
+
+## Build generated
+build/
+DerivedData/
+*.build/
+Build/
+ModuleCache.noindex/
+PrecompiledHeaders/
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+*.xcarchive
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.generated.swift
+swiftgen-output/
+
+### CocoaPods ###
+## CocoaPods
+Pods/
+Podfile.lock
+
+## Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+## Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+.netrc
+
+### Project Specific ###
+## Configuration Files
+*.xcconfig
+!Debug.xcconfig
+!Release.xcconfig
+!Staging.xcconfig
+GoogleService-Info.plist
+api-keys.plist
+sentry.properties
+firebase_app_id_file.json
+.env
+.env.*
+
+## Code Signing
+*.cer
+*.mobileprovision
+*.provisionprofile
+*.p12
+*.certSigningRequest
+*.keystore
+
+## Video Processing
+VideoCache/
+ProcessedVideos/
+VideoThumbnails/
+TempVideoExports/
+AnnotationOverlays/
+VideoFrameExtracts/
+CompressedVideos/
+VideoAnalytics/
+
+## Testing
+*.xcresult/
+TestResults/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+UITests/Screenshots/
+UITests/Recordings/
+PerformanceTestResults/
+
+## Code Coverage
+*.profraw
+*.coverage
+*.gcno
+*.gcda
+
+### System ###
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+## Temporary files
+*.swp
+*.lock
+*~.nib
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.moved-aside
+profile
+timeline
+timeline.xctimeline
+playground.xcworkspace
+
+## IDE
+.idea/
+.vscode/
+*.playground
+*.playground/
+
+### Project Specific Exceptions ###
+## Keep specific Xcode project files
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/xcshareddata/xcschemes/*
+!*.xcworkspace/contents.xcworkspacedata
+
+## Keep specific configuration files
+!*.xcconfig
+!default.xcconfig
+
+## Keep specific documentation
+!README.md
+!CHANGELOG.md
+!LICENSE
