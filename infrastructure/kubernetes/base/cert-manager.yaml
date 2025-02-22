@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: List
+items:
+# Production ClusterIssuer for Let's Encrypt
+- apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-prod
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: videocoach
+      app.kubernetes.io/version: v1.12.3
+      app.kubernetes.io/part-of: video-coaching-platform
+  spec:
+    acme:
+      server: https://acme-v02.api.letsencrypt.org/directory
+      email: security@videocoach.com
+      privateKeySecretRef:
+        name: letsencrypt-prod-key
+      solvers:
+      - http01:
+          ingress:
+            class: nginx
+            podTemplate:
+              spec:
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 1001
+                  fsGroup: 1001
+                  seccompProfile:
+                    type: RuntimeDefault
+
+# Staging ClusterIssuer for testing
+- apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-staging
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: videocoach
+      app.kubernetes.io/version: v1.12.3
+      app.kubernetes.io/part-of: video-coaching-platform
+  spec:
+    acme:
+      server: https://acme-staging-v02.api.letsencrypt.org/directory
+      email: security@videocoach.com
+      privateKeySecretRef:
+        name: letsencrypt-staging-key
+      solvers:
+      - http01:
+          ingress:
+            class: nginx
+            podTemplate:
+              spec:
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 1001
+                  fsGroup: 1001
+                  seccompProfile:
+                    type: RuntimeDefault
+
+# Wildcard Certificate for videocoach.com domains
+- apiVersion: cert-manager.io/v1
+  kind: Certificate
+  metadata:
+    name: videocoach-wildcard-cert
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: videocoach
+      app.kubernetes.io/part-of: video-coaching-platform
+    annotations:
+      cert-manager.io/issue-temporary-certificate: "true"
+      cert-manager.io/revocation-reason: "unspecified"
+  spec:
+    secretName: videocoach-tls
+    duration: 2160h # 90 days
+    renewBefore: 360h # 15 days
+    commonName: "*.videocoach.com"
+    dnsNames:
+    - "*.videocoach.com"
+    - "videocoach.com"
+    - "api.videocoach.com"
+    - "web.videocoach.com"
+    - "coach.videocoach.com"
+    - "athlete.videocoach.com"
+    privateKey:
+      algorithm: RSA
+      encoding: PKCS1
+      size: 4096
+      rotationPolicy: Always
+    usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth
+    issuerRef:
+      name: letsencrypt-prod
+      kind: ClusterIssuer
+      group: cert-manager.io
+
+# ServiceMonitor for Prometheus monitoring
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: cert-manager-monitoring
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: videocoach
+      app.kubernetes.io/part-of: video-coaching-platform
+      monitoring: "true"
+  spec:
+    endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: false
+      metricRelabelings:
+      - sourceLabels: [__name__]
+        regex: cert_manager_.*
+        action: keep
+    selector:
+      matchLabels:
+        app.kubernetes.io/name: cert-manager
+    namespaceSelector:
+      matchNames:
+      - videocoach-system
+
+# PrometheusRule for cert-manager alerts
+- apiVersion: monitoring.coreos.com/v1
+  kind: PrometheusRule
+  metadata:
+    name: cert-manager-alerts
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: videocoach
+      app.kubernetes.io/part-of: video-coaching-platform
+      prometheus: "true"
+  spec:
+    groups:
+    - name: cert-manager.rules
+      rules:
+      - alert: CertificateExpiringSoon
+        expr: |
+          avg_over_time(cert_manager_certificate_expiration_timestamp_seconds[1h]) - time() < (15 * 24 * 3600)
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Certificate {{ $labels.certificate }} is expiring soon"
+          description: "Certificate {{ $labels.certificate }} in namespace {{ $labels.namespace }} will expire in less than 15 days"
+      - alert: CertificateRenewalFailure
+        expr: |
+          increase(cert_manager_certificate_renewal_failures_total[1h]) > 0
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Certificate renewal failure detected"
+          description: "Certificate {{ $labels.certificate }} in namespace {{ $labels.namespace }} failed to renew"
