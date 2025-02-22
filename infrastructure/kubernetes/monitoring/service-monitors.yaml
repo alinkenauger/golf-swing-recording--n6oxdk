@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: monitoring.coreos.com/v1  # prometheus-operator v0.68.x
+  kind: ServiceMonitor
+  metadata:
+    name: api-gateway-monitor
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/part-of: video-coaching-platform
+      app.kubernetes.io/component: api-gateway
+      monitoring.videocoach.io/critical: "true"
+  spec:
+    selector:
+      matchLabels:
+        app: api-gateway
+    endpoints:
+    - port: http
+      interval: 15s # SCRAPE_INTERVAL
+      scrapeTimeout: 10s # SCRAPE_TIMEOUT
+      path: /metrics
+      metricRelabelings:
+      - sourceLabels: ["__name__"]
+        regex: "http_(requests_total|request_duration_seconds|errors_total)"
+        action: keep
+      honorLabels: true
+      relabelings:
+      - sourceLabels: ["__meta_kubernetes_pod_label_app"]
+        targetLabel: app
+      - sourceLabels: ["__meta_kubernetes_pod_label_version"]
+        targetLabel: version
+    - port: http
+      interval: 30s
+      path: /health
+      honorLabels: true
+      metricRelabelings:
+      - sourceLabels: ["__name__"]
+        regex: "up|health_check.*"
+        action: keep
+
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: video-service-monitor
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/part-of: video-coaching-platform
+      app.kubernetes.io/component: video-service
+      monitoring.videocoach.io/critical: "true"
+  spec:
+    selector:
+      matchLabels:
+        app: video-service
+    endpoints:
+    - port: http
+      interval: 15s # SCRAPE_INTERVAL
+      scrapeTimeout: 10s # SCRAPE_TIMEOUT
+      path: /metrics
+      metricRelabelings:
+      - sourceLabels: ["__name__"]
+        regex: "video_(processing_duration|upload_total|errors|storage_usage|encoding_queue_size|upload_bandwidth_bytes)"
+        action: keep
+      honorLabels: true
+      relabelings:
+      - sourceLabels: ["__meta_kubernetes_pod_label_app"]
+        targetLabel: app
+      - sourceLabels: ["__meta_kubernetes_pod_label_version"]
+        targetLabel: version
+    - port: http
+      interval: 30s
+      path: /health
+      honorLabels: true
+      metricRelabelings:
+      - sourceLabels: ["__name__"]
+        regex: "up|health_check.*"
+        action: keep
+
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    name: platform-kpis-monitor
+    namespace: videocoach-system
+    labels:
+      app.kubernetes.io/part-of: video-coaching-platform
+      app.kubernetes.io/component: business-metrics
+      monitoring.videocoach.io/critical: "true"
+  spec:
+    selector:
+      matchLabels:
+        app: business-metrics
+    endpoints:
+    - port: http
+      interval: 60s
+      path: /metrics
+      metricRelabelings:
+      - sourceLabels: ["__name__"]
+        regex: "business_(active_users|revenue|subscription_count|video_uploads)"
+        action: keep
+      honorLabels: true
