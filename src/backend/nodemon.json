@@ -1,0 +1,40 @@
+{
+  "watch": [
+    "api-gateway/src",
+    "chat-service/src",
+    "coach-service/src",
+    "payment-service/src",
+    "user-service/src",
+    "video-service/src",
+    "shared"
+  ],
+  "ext": "ts,js,json",
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/tests/**",
+    "**/coverage/**",
+    "**/dist/**",
+    "**/build/**",
+    "node_modules/**",
+    "**/.git/**",
+    "**/.nyc_output/**",
+    "**/logs/**"
+  ],
+  "exec": "ts-node -r tsconfig-paths/register",
+  "verbose": true,
+  "delay": 2000,
+  "env": {
+    "NODE_ENV": "development",
+    "TS_NODE_PROJECT": "./tsconfig.json",
+    "DEBUG": "app:*"
+  },
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "events": {
+    "restart": "echo 'App restarted due to changes'",
+    "crash": "echo 'App crashed - waiting for file changes before restarting'"
+  },
+  "restartable": "rs"
+}
