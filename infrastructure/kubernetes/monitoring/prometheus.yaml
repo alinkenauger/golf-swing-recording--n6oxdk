@@ -1,0 +1,139 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  namespace: videocoach-system
+  labels:
+    app.kubernetes.io/part-of: video-coaching-platform
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/version: v2.45.0
+spec:
+  replicas: 2
+  version: v2.45.0
+  serviceAccountName: prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: video-coaching-platform
+  podMonitorSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: video-coaching-platform
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: "2"
+    limits:
+      memory: 8Gi
+      cpu: "4"
+  retention: 30d
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: database-storage
+        resources:
+          requests:
+            storage: 100Gi
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  alerting:
+    alertmanagers:
+      - name: alertmanager-main
+        namespace: videocoach-system
+        port: web
+  scrapeInterval: 15s
+  evaluationInterval: 15s
+  
+  # Scrape configurations for service discovery
+  scrapeConfigs:
+    - job_name: kubernetes-pods
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_container_port_name]
+          action: keep
+          regex: metrics
+    
+    - job_name: kubernetes-services
+      kubernetes_sd_configs:
+        - role: service
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+    
+    - job_name: api-gateway
+      kubernetes_sd_configs:
+        - role: service
+          namespaces:
+            names: [videocoach-system]
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
+          action: keep
+          regex: api-gateway
+    
+    - job_name: video-service
+      kubernetes_sd_configs:
+        - role: service
+          namespaces:
+            names: [videocoach-system]
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
+          action: keep
+          regex: video-service
+
+  # Recording rules for aggregating metrics
+  rules:
+    - record: request_rate
+      expr: sum(rate(http_requests_total[5m])) by (service)
+    - record: error_rate
+      expr: sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+    - record: latency_percentile
+      expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))
+
+  # Alerting rules for critical conditions
+  alerting_rules:
+    - alert: HighCPUUsage
+      expr: container_cpu_usage_seconds_total > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        description: "Container CPU usage above 80% for 5 minutes"
+        
+    - alert: HighMemoryUsage
+      expr: container_memory_usage_bytes / container_memory_max_usage_bytes > 0.85
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        description: "Container memory usage above 85% for 5 minutes"
+        
+    - alert: APIHighLatency
+      expr: http_request_duration_seconds > 2
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: "API latency above 2 seconds for 5 minutes"
+        
+    - alert: ServiceDown
+      expr: up == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: "Service is down for 5 minutes"
+
+  # Additional configurations for uptime monitoring
+  uptime_targets:
+    - targets: ['api-gateway:8080']
+      labels:
+        service: api-gateway
+    - targets: ['video-service:8080']
+      labels:
+        service: video-service
