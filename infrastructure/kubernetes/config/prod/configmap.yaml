@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videocoach-prod-config
+  namespace: production
+  labels:
+    app: videocoach
+    env: production
+    version: 1.0.0
+data:
+  # API Gateway Configuration
+  api-gateway-config: |
+    port: 3000
+    host: "0.0.0.0"
+    cors:
+      origin: "https://app.videocoach.com"
+      methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+      headers: "Content-Type,Authorization,X-Request-ID,X-Correlation-ID"
+      credentials: true
+    rate_limiting:
+      public:
+        window_ms: 60000
+        max_requests: 100
+      authenticated:
+        window_ms: 60000
+        max_requests: 1000
+      video_upload:
+        window_ms: 3600000
+        max_requests: 10
+      burst_multiplier: 1.5
+    security:
+      jwt_expires_in: "24h"
+      jwt_refresh_expires_in: "7d"
+      mfa_required_roles: ["admin", "coach"]
+      headers:
+        X-Frame-Options: "DENY"
+        X-Content-Type-Options: "nosniff"
+        X-XSS-Protection: "1; mode=block"
+        Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+        Content-Security-Policy: "default-src 'self'"
+
+  # Video Service Configuration
+  video-service-config: |
+    port: 8000
+    host: "0.0.0.0"
+    max_video_size_mb: 500
+    min_video_size_mb: 1
+    supported_formats: [".mp4", ".mov", ".avi"]
+    processing_timeout: 55
+    processing_threads: 4
+    gpu_enabled: true
+    output_formats:
+      HD:
+        resolution: "1080p"
+        bitrate: "6000k"
+        fps: 30
+      SD:
+        resolution: "720p"
+        bitrate: "4000k"
+        fps: 30
+      MOBILE:
+        resolution: "480p"
+        bitrate: "2000k"
+        fps: 30
+    s3_prefix: "videos/prod/"
+    cache_ttl: 3600
+    resource_limits:
+      cpu: "4"
+      memory: "8Gi"
+      gpu: "1"
+
+  # Monitoring Configuration
+  monitoring-config: |
+    prometheus:
+      port: 9090
+      path: "/metrics"
+      scrape_interval: "15s"
+    elastic_apm:
+      service_name: "videocoach-prod"
+      server_url: "http://apm:8200"
+      environment: "production"
+    logging:
+      level: "INFO"
+      format: "json"
+      correlation_id: true
+    metrics:
+      enabled: true
+      interval: "15s"
+      prefix: "videocoach_"
+    tracing:
+      enabled: true
+      sampling_rate: 0.1
+    health_check:
+      path: "/health"
+      interval: "30s"
+      timeout: "5s"
+    alert_thresholds:
+      cpu_usage_percent: 80
+      memory_usage_percent: 85
+      error_rate_percent: 1
+      latency_p95_ms: 500
+
+  # Redis Configuration
+  redis-config: |
+    url: "redis://redis-master.production:6379"
+    max_connections: 100
+    timeout: 5
+    retry_attempts: 3
+    sentinel:
+      enabled: true
+      master: "mymaster"
+      nodes: ["sentinel-0:26379", "sentinel-1:26379", "sentinel-2:26379"]
+
+  # Service Endpoints
+  service-endpoints: |
+    user_service: "http://user-service.production:8001"
+    video_service: "http://video-service.production:8000"
+    chat_service: "http://chat-service.production:8002"
+    coach_service: "http://coach-service.production:8003"
+    payment_service: "http://payment-service.production:8004"
+    health_check_endpoints:
+      liveness: "/health/live"
+      readiness: "/health/ready"
+      startup: "/health/startup"
+
+  # Authentication Configuration
+  auth-config: |
+    auth0_domain: "videocoach.auth0.com"
+    auth0_audience: "https://api.videocoach.com"
+    token_signing_alg: "RS256"
+    mfa_required_roles: ["admin", "coach"]
+    session_timeout: 3600
+    key_rotation_interval: 86400
