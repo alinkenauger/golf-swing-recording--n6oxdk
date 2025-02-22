@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_md">
+
+    <!-- Subscription Status Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/subscription_status_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/card_elevation"
+        android:contentDescription="@string/subscription_status_description"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <TextView
+                android:id="@+id/subscription_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subscription_status"
+                android:textAppearance="@style/TextAppearance.App.Headline2"
+                android:layout_marginBottom="@dimen/spacing_sm"/>
+
+            <TextView
+                android:id="@+id/subscription_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.App.Body1"
+                tools:text="Premium Plan - $29.99/month"/>
+
+            <TextView
+                android:id="@+id/next_billing_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.App.Body2"
+                android:textColor="@color/color_text_secondary"
+                tools:text="Next billing date: Oct 15, 2023"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Payment Method Section -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/payment_method_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_lg"
+        style="@style/Widget.App.TextInputLayout"
+        android:hint="@string/payment_method"
+        app:layout_constraintTop_toBottomOf="@id/subscription_status_card">
+
+        <com.stripe.android.view.CardInputWidget
+            android:id="@+id/card_input_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:contentDescription="@string/card_input_description"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Process Payment Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/process_payment_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_md"
+        android:text="@string/process_payment"
+        android:minHeight="48dp"
+        style="@style/Widget.App.Button.Primary"
+        app:layout_constraintTop_toBottomOf="@id/payment_method_container"/>
+
+    <!-- Transaction Analytics Chart -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/transaction_analytics_chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/spacing_xl"
+        android:contentDescription="@string/analytics_chart_description"
+        app:layout_constraintTop_toBottomOf="@id/process_payment_button"/>
+
+    <!-- Payment History Section -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/payment_history_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/spacing_md"
+        app:layout_constraintTop_toBottomOf="@id/transaction_analytics_chart"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/payment_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/spacing_md"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_payment_history"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        style="@style/Widget.App.ProgressIndicator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Error Container -->
+    <LinearLayout
+        android:id="@+id/error_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        android:padding="@dimen/spacing_md"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.App.Body1"
+            android:textAlignment="center"
+            android:text="@string/payment_error_message"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/retry"
+            style="@style/Widget.App.Button.Primary"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
