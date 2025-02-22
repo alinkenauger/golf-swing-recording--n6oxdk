@@ -1,0 +1,144 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: kibana
+    namespace: videocoach-monitoring
+    labels:
+      app: kibana
+      component: logging
+      part-of: elk-stack
+      app.kubernetes.io/name: videocoach
+      app.kubernetes.io/part-of: video-coaching-platform
+  spec:
+    ports:
+    - name: http
+      port: 5601
+      protocol: TCP
+      targetPort: 5601
+    selector:
+      app: kibana
+    type: ClusterIP
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: kibana-config
+    namespace: videocoach-monitoring
+    labels:
+      app: kibana
+      component: logging
+      part-of: elk-stack
+  data:
+    kibana.yml: |
+      server.name: kibana
+      server.host: "0.0.0.0"
+      server.publicBaseUrl: "https://kibana.videocoach.internal"
+      elasticsearch.hosts: ["http://elasticsearch:9200"]
+      elasticsearch.ssl.verificationMode: certificate
+      xpack.security.enabled: true
+      xpack.security.encryptionKey: "${KIBANA_ENCRYPTION_KEY}"
+      xpack.reporting.enabled: true
+      xpack.reporting.capture.browser.chromium.disableSandbox: false
+      xpack.monitoring.enabled: true
+      xpack.monitoring.ui.container.elasticsearch.enabled: true
+      logging.verbose: false
+      logging.json: true
+      kibana.index: ".kibana"
+      telemetry.enabled: false
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: kibana
+    namespace: videocoach-monitoring
+    labels:
+      app: kibana
+      component: logging
+      part-of: elk-stack
+    annotations:
+      kubernetes.io/description: "Kibana deployment for log visualization"
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "5601"
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: kibana
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          app: kibana
+          component: logging
+          part-of: elk-stack
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - kibana
+                topologyKey: kubernetes.io/hostname
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 1000
+        containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:8.10.4
+          ports:
+          - containerPort: 5601
+            name: http
+            protocol: TCP
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          env:
+          - name: ELASTICSEARCH_HOSTS
+            value: "http://elasticsearch:9200"
+          - name: KIBANA_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: kibana-secrets
+                key: encryption-key
+          volumeMounts:
+          - name: config
+            mountPath: /usr/share/kibana/config/kibana.yml
+            subPath: kibana.yml
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+        volumes:
+        - name: config
+          configMap:
+            name: kibana-config
