@@ -1,0 +1,58 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: video-storage
+  namespace: videocoach-system
+  labels:
+    app.kubernetes.io/name: videocoach
+    app.kubernetes.io/part-of: video-coaching-platform
+  annotations:
+    description: "High-performance storage class optimized for video content"
+provisioner: ebs.csi.aws.com # v1.21.0
+parameters:
+  type: gp3
+  encrypted: "true"
+  iops: "16000"
+  throughput: "700"
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: database-storage
+  namespace: videocoach-system
+  labels:
+    app.kubernetes.io/name: videocoach
+    app.kubernetes.io/part-of: video-coaching-platform
+  annotations:
+    description: "High-IOPS storage class for database workloads"
+provisioner: ebs.csi.aws.com # v1.21.0
+parameters:
+  type: io2
+  encrypted: "true"
+  iops: "64000"
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: cache-storage
+  namespace: videocoach-system
+  labels:
+    app.kubernetes.io/name: videocoach
+    app.kubernetes.io/part-of: video-coaching-platform
+  annotations:
+    description: "Fast access storage class optimized for caching"
+provisioner: ebs.csi.aws.com # v1.21.0
+parameters:
+  type: gp3
+  encrypted: "true"
+  throughput: "1000"
+  iops: "16000"
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
