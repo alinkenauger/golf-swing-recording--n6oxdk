@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Adaptive launcher icon configuration for Android 8.0+ (API 26)
+    Background: Primary brand color #2D5BFF
+    Foreground: White camera lens logo for optimal contrast
+    Viewport: 108dp x 108dp for proper scaling across devices
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background"/>
+    <foreground android:drawable="@drawable/ic_launcher_foreground"/>
+</adaptive-icon>
