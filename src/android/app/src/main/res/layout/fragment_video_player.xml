@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Video Player Fragment Layout
+    Provides a professional video playback interface with:
+    - Full-screen video display with aspect ratio preservation
+    - Custom playback controls with Material Design
+    - Loading and error states
+    - Gesture support for playback control
+    - Enhanced accessibility features
+    
+    External Dependencies:
+    - androidx.constraintlayout:constraintlayout:2.1.4
+    - com.google.android.exoplayer2:exoplayer-ui:2.19.1
+    - com.google.android.material:material:1.9.0
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_surface"
+    android:importantForAccessibility="yes">
+
+    <!-- Video Player View with custom controls and gesture support -->
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:use_controller="true"
+        app:resize_mode="fit"
+        app:show_buffering="when_playing"
+        app:keep_screen_on="true"
+        app:player_layout_id="@layout/custom_player_control_view"
+        app:surface_type="surface_view"
+        app:shutter_background_color="@color/color_surface"
+        android:contentDescription="@string/video_player_content_description"
+        android:accessibilityLiveRegion="polite"
+        android:focusable="true"
+        android:clickable="true"
+        tools:visibility="visible"/>
+
+    <!-- Loading Indicator -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorSize="48dp"
+        app:trackThickness="4dp"
+        app:indicatorColor="@color/color_primary"
+        android:contentDescription="@string/loading_indicator_description"
+        android:importantForAccessibility="yes"
+        tools:visibility="visible"/>
+
+    <!-- Error State View -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/errorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_video"
+        android:visibility="gone"
+        android:contentDescription="@string/error_view_description"
+        android:minWidth="44dp"
+        android:minHeight="44dp"
+        app:tint="@color/color_error"
+        android:focusable="true"
+        android:clickable="true"
+        tools:visibility="visible"/>
+
+    <!-- Annotation Overlay Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/annotationContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/videoPlayer"
+        app:layout_constraintEnd_toEndOf="@id/videoPlayer"
+        app:layout_constraintTop_toTopOf="@id/videoPlayer"
+        app:layout_constraintBottom_toBottomOf="@id/videoPlayer"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="noHideDescendants"/>
+
+    <!-- Gesture Detection Overlay -->
+    <View
+        android:id="@+id/gestureOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/videoPlayer"
+        app:layout_constraintEnd_toEndOf="@id/videoPlayer"
+        app:layout_constraintTop_toTopOf="@id/videoPlayer"
+        app:layout_constraintBottom_toBottomOf="@id/videoPlayer"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/gesture_overlay_description"
+        android:focusable="true"
+        android:clickable="true"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
