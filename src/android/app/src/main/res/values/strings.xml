@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Information -->
+    <string name="app_name">Video Coach</string>
+    <string name="loading">Loading...</string>
+
+    <!-- Error Messages -->
+    <string name="error_generic">Something went wrong. Please try again later.</string>
+    <string name="error_network">Unable to connect. Please check your internet connection and try again.</string>
+    <string name="error_video">Video playback error. Please check your connection or try again.</string>
+    <string name="error_upload">Upload failed. Please ensure you have a stable connection and try again.</string>
+    <string name="error_permission">Permission required. Please grant necessary permissions in settings.</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_videos">Videos</string>
+    <string name="nav_chat">Messages</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_back">Navigate back</string>
+    <string name="nav_close">Close screen</string>
+
+    <!-- Authentication -->
+    <string name="auth_login">Log In</string>
+    <string name="auth_signup">Sign Up</string>
+    <string name="auth_logout">Log Out</string>
+    <string name="auth_email_hint">Enter your email address</string>
+    <string name="auth_password_hint">Enter your password</string>
+    <string name="auth_forgot_password">Forgot Password?</string>
+    <string name="auth_reset_password">Reset Password</string>
+    <string name="auth_biometric_prompt">Use fingerprint to log in</string>
+    <string name="auth_verification_sent">Verification email sent</string>
+    <string name="auth_password_requirements">Password must be at least 8 characters</string>
+
+    <!-- Video Controls -->
+    <string name="video_record">Record Video</string>
+    <string name="video_upload">Upload Video</string>
+    <string name="video_annotate">Add Annotations</string>
+    <string name="video_save">Save Changes</string>
+    <string name="video_discard">Discard Changes</string>
+    <string name="video_preview">Preview Video</string>
+    <string name="video_play">Play Video</string>
+    <string name="video_pause">Pause Video</string>
+    <string name="video_loading">Loading Video...</string>
+    <string name="video_processing">Processing video...</string>
+    <string name="video_upload_progress">Uploading: %1$d%%</string>
+    <string name="video_duration">%1$d:%2$d</string>
+
+    <!-- Annotation Tools -->
+    <string name="annotation_draw_tool">Drawing Tool - Free hand drawing</string>
+    <string name="annotation_line_tool">Line Tool - Straight lines</string>
+    <string name="annotation_arrow_tool">Arrow Tool - Directional markers</string>
+    <string name="annotation_voice_record">Record Voice-over</string>
+    <string name="annotation_voice_stop">Stop Recording</string>
+    <string name="annotation_clear_all">Clear All Annotations</string>
+    <string name="annotation_undo">Undo Last Action</string>
+    <string name="annotation_redo">Redo Last Action</string>
+    <string name="annotation_color_picker">Select Color</string>
+    <string name="annotation_thickness">Line Thickness</string>
+
+    <!-- Chat -->
+    <string name="chat_new_message">New Message</string>
+    <string name="chat_send">Send Message</string>
+    <string name="chat_attach">Attach File</string>
+    <string name="chat_record_voice">Record Voice Message</string>
+    <string name="chat_empty">No messages yet. Start a conversation!</string>
+    <string name="chat_typing">%1$s is typing...</string>
+    <string name="chat_message_sent">Message sent</string>
+    <string name="chat_message_delivered">Message delivered</string>
+    <string name="chat_message_read">Message read</string>
+
+    <!-- Coach Profile -->
+    <string name="coach_profile">Coach Profile</string>
+    <string name="coach_programs">Training Programs</string>
+    <string name="coach_reviews">Reviews and Ratings</string>
+    <string name="coach_contact">Contact Coach</string>
+    <string name="coach_subscribe">Subscribe to Coach</string>
+    <string name="coach_availability">Coach Availability</string>
+    <string name="coach_experience">%1$d years experience</string>
+    <string name="coach_rating">%1$.1f out of 5 stars</string>
+
+    <!-- Payment -->
+    <string name="payment_subscribe">Subscribe Now</string>
+    <string name="payment_method">Select Payment Method</string>
+    <string name="payment_card_number">Enter Card Number</string>
+    <string name="payment_expiry">MM/YY</string>
+    <string name="payment_cvv">Security Code</string>
+    <string name="payment_process">Process Payment</string>
+    <string name="payment_subscription_details">Subscription Details</string>
+    <string name="payment_price">$%1$.2f per month</string>
+    <string name="payment_trial_period">%1$d day free trial</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="accessibility_video_player">Video player controls</string>
+    <string name="accessibility_annotation_canvas">Drawing canvas for video annotations</string>
+    <string name="accessibility_toolbar">Annotation tools selection</string>
+    <string name="accessibility_voice_recorder">Voice recording controls</string>
+    <string name="accessibility_progress_bar">Video progress indicator</string>
+    <string name="accessibility_loading_state">Content is loading</string>
+    <string name="accessibility_button_enabled">Button is enabled</string>
+    <string name="accessibility_button_disabled">Button is disabled</string>
+    <string name="accessibility_selected">Selected</string>
+    <string name="accessibility_unselected">Not selected</string>
+</resources>
