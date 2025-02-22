@@ -1,0 +1,187 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: payment-service
+    namespace: videocoach-system
+    labels:
+      app: payment-service
+      component: backend
+      part-of: video-coaching-platform
+      security-tier: high
+      pci-compliant: "true"
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: payment-service
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          app: payment-service
+          security-tier: high
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "3003"
+          prometheus.io/path: "/metrics"
+      spec:
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 1000
+        containers:
+        - name: payment-service
+          image: videocoach/payment-service:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+          - containerPort: 3003
+            name: http
+          - containerPort: 9090
+            name: metrics
+          env:
+          - name: NODE_ENV
+            value: "production"
+          - name: PORT
+            value: "3003"
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: payment-secrets
+                key: mongodb-uri
+          - name: STRIPE_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: payment-secrets
+                key: stripe-secret-key
+          - name: STRIPE_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: payment-secrets
+                key: stripe-webhook-secret
+          - name: REDIS_HOST
+            value: "redis-master"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 30
+          volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+          - name: payment-secrets
+            mountPath: /etc/payment-secrets
+            readOnly: true
+        volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: payment-secrets
+          secret:
+            secretName: payment-secrets
+            defaultMode: 0400
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: payment-service
+    namespace: videocoach-system
+    labels:
+      app: payment-service
+      component: backend
+      part-of: video-coaching-platform
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+  spec:
+    type: ClusterIP
+    ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    selector:
+      app: payment-service
+
+- apiVersion: autoscaling/v2
+  kind: HorizontalPodAutoscaler
+  metadata:
+    name: payment-service-hpa
+    namespace: videocoach-system
+    labels:
+      app: payment-service
+      component: backend
+      part-of: video-coaching-platform
+  spec:
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: payment-service
+    minReplicas: 3
+    maxReplicas: 10
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    behavior:
+      scaleUp:
+        stabilizationWindowSeconds: 60
+        policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+      scaleDown:
+        stabilizationWindowSeconds: 300
+        policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
