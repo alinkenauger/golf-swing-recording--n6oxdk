@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Video Annotation Fragment Layout
+    - Implements split-screen video review workspace
+    - Features synchronized video playback and annotation canvas
+    - Material Design compliant UI components
+    - Hardware accelerated drawing for smooth annotations
+    - Accessibility support with content descriptions
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:hardwareAccelerated="true"
+    android:keepScreenOn="true">
+
+    <!-- Video Player Component -->
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:keepScreenOn="true"
+        app:layout_constraintBottom_toTopOf="@id/annotationToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:resize_mode="fit"
+        app:use_controller="false"
+        app:surface_type="texture_view"
+        app:show_buffering="when_playing"
+        android:contentDescription="@string/video_player_description" />
+
+    <!-- Annotation Canvas Overlay -->
+    <com.videocoach.views.AnnotationCanvas
+        android:id="@+id/annotationCanvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layerType="hardware"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toTopOf="@id/annotationToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Video Playback Controls -->
+    <com.videocoach.views.VideoControls
+        android:id="@+id/videoControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface_dark"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@id/annotationToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:controllerTimeout="3000"
+        app:controllerLayoutId="@layout/custom_playback_controls" />
+
+    <!-- Annotation Tools Toolbar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/annotationToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_surface"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_annotation_tool"
+        tools:itemCount="5" />
+
+    <!-- Voice-Over Recording FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/voiceOverButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_record"
+        android:contentDescription="@string/record_voice_over"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toTopOf="@id/annotationToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:fabSize="normal"
+        app:tint="@color/color_white"
+        app:backgroundTint="@color/color_error"
+        app:rippleColor="@color/color_error_dark" />
+
+    <!-- Drawing Tools Panel -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/drawingToolsPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="@color/color_surface">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Color Picker -->
+            <com.videocoach.views.ColorPickerView
+                android:id="@+id/colorPicker"
+                android:layout_width="48dp"
+                android:layout_height="240dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Stroke Width Slider -->
+            <com.google.android.material.slider.Slider
+                android:id="@+id/strokeWidthSlider"
+                android:layout_width="48dp"
+                android:layout_height="200dp"
+                android:rotation="270"
+                android:layout_marginTop="16dp"
+                app:labelBehavior="floating"
+                android:contentDescription="@string/stroke_width_adjustment" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
