@@ -1,0 +1,129 @@
+# SwiftLint configuration file for Video Coaching iOS app
+# Version: SwiftLint 0.52.0
+
+# Disabled rules that don't align with our project's style
+disabled_rules:
+  - trailing_whitespace
+  - vertical_whitespace_opening_braces
+  - multiple_closures_with_trailing_closure
+  - comment_spacing
+  - opening_brace
+
+# Opt-in rules for enhanced code quality
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - private_outlet
+  - weak_delegate
+  - closure_spacing
+  - explicit_init
+  - redundant_nil_coalescing
+  - sorted_imports
+  - array_init
+  - contains_over_filter_count
+  - fatal_error_message
+  - first_where
+  - last_where
+  - toggle_bool
+  - unowned_variable_capture
+  - vertical_parameter_alignment_on_call
+
+# Excluded paths from linting
+excluded:
+  - Pods
+  - VideoCoachTests
+  - VideoCoachUITests
+  - fastlane
+  - build
+  - DerivedData
+
+# Line length configuration
+line_length:
+  warning: 120
+  error: 160
+  ignores_comments: true
+  ignores_urls: true
+  ignores_function_declarations: true
+
+# File length limits
+file_length:
+  warning: 400
+  error: 1000
+  ignore_comment_only_lines: true
+
+# Function body length limits
+function_body_length:
+  warning: 50
+  error: 100
+
+# Type body length limits
+type_body_length:
+  warning: 250
+  error: 400
+
+# Cyclomatic complexity limits
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+  ignores_case_statements: true
+
+# Nesting configuration
+nesting:
+  type_level:
+    warning: 2
+    error: 3
+  statement_level:
+    warning: 3
+    error: 5
+
+# Identifier naming rules
+identifier_name:
+  min_length:
+    warning: 3
+    error: 2
+  max_length:
+    warning: 40
+    error: 60
+  excluded:
+    - id
+    - url
+    - x
+    - y
+    - dx
+    - dy
+    - to
+    - at
+    - in
+  validates_start_with_lowercase: true
+
+# Custom rules for project-specific requirements
+custom_rules:
+  force_try:
+    name: Force Try
+    regex: 'try!'
+    message: Force try should be avoided. Use proper error handling instead.
+    severity: error
+  
+  todo_format:
+    name: TODO Format
+    regex: '(TODO|FIXME):? (?!\([a-zA-Z]+\))'
+    message: TODO/FIXME comment should include author name in parentheses, e.g., TODO(johndoe): message
+    severity: warning
+  
+  print_usage:
+    name: Print Usage
+    regex: 'print\('
+    message: Print statements should not be committed to production code. Use proper logging instead.
+    severity: warning
+  
+  mark_spacing:
+    name: MARK Spacing
+    regex: '// MARK: [^ -]'
+    message: MARK statements should use the format: // MARK: - Section name
+    severity: warning
+  
+  video_processing_comment:
+    name: Video Processing Comment
+    regex: '// VideoProcessing: '
+    message: Video processing code should be documented with performance implications
+    severity: warning
